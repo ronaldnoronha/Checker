@@ -1,9 +1,9 @@
 
-public class testChecker {
+public class RunChecker {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		checker a = new checker("15.txt");
+		Checker a = new Checker("11a.txt");
 		
 
 	}

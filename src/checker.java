@@ -1,10 +1,10 @@
 import java.io.*;
 import java.util.*;
 
-public class checker {
+public class Checker {
 	private ArrayList<String> file = new ArrayList<String>();
 	private ArrayList<Transaction> transactionList = new ArrayList<Transaction>();
-	public checker(String filename){	
+	public Checker(String filename){	
 		try{
 			File fw = new File(filename);
 			Scanner in = new Scanner(fw);
@@ -19,9 +19,9 @@ public class checker {
 		createTransactions();
 		//printTransactions();
 		transactionSummary();
-		runViolationCheck2();
+		runViolationCheck();
 	}
-	private void runViolationCheck2(){
+	private void runViolationCheck(){
 		for (int i =0;i<transactionList.size();i++){
 			if (transactionList.get(i).isRead() && transactionList.get(i).isOK()){
 				int reqRead = transactionList.get(i).getStartLine();
@@ -33,9 +33,7 @@ public class checker {
 						break;
 					}
 				}
-				if (!checkValidValue(i,retRead,reqWrite)) System.out.println("Violation with retRead at "+retRead);
-				// if violation run getViolationId()
-				//System.out.println("Transaction: "+i+" reqRead: "+reqRead+" retRead "+retRead+" reqWrite "+reqWrite);				
+				if (!checkValidValue(i,retRead,reqWrite)) System.out.println("Violation with retRead at "+retRead);						
 			}
 		}
 	}
@@ -123,32 +121,6 @@ public class checker {
 			}	
 		}
 	}
-	private void runViolationCheck(){
-		/// organise a list of transactions	
-		String[] line;
-		boolean valid;
-		for (int i=0;i<file.size();i++){
-			line = file.get(i).split("\t");
-			if (isReadOp(line)){
-				String key = getKey(line[3]);
-				String value = getValue(line[3]);
-				int startLineNumber = getStartLineNumber(line[0],key,i);
-				if (startLineNumber == 0 && value.equals("nil")){
-					// for the case the pID never wrote anything and the read value was also nil
-					valid = true;					
-				}else{
-					valid = valueInBetween(key,value,startLineNumber,i);					
-				}
-				
-				if (valid){
-					//System.out.println("All good at line "+(i+1)+" Process "+line[0]);
-				} else {
-					System.out.println("Violation at line "+(i+1)+" Process "+line[0]);
-				}
-			}
-		}
-	}
-
 	private boolean isReadOp(String[] line){
 		if (line[1].equals(":ok") && line[2].equals(":read")){
 			return true;
